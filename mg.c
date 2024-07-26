@@ -6,7 +6,7 @@
 #include <json.h>
 
 static bool interrupted = false;
-static const char* msg = "{ \"APIKey\": \"fe91a93b7ff074d2baea961e669581b91c6ac382\", \
+static const char* msg = "{ \"APIKey\": \"\", \
                           \"BoundingBoxes\": [ [[59.011, -1.7 ],[27.7, 35.3]] ]}";//,\
 						//  \"FilterMessageTypes\": [\"PositionReport\"]}";
 static const char* url = "wss://stream.aisstream.io/v0/stream";
