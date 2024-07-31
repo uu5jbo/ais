@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <json.h>
+#include "mid.h"
 
 // const search patterns
     const char *mmsi_str = "\"MMSI\":";
@@ -75,14 +76,14 @@ void parser1( char *rawdata, SHIP_T *ship )
 
 static void country( SHIP_T *ship )
 {
-    FILE *fd;
-    int i = 0;
-    char ch;
-    long fcount;
-    char *pdata;
+   // FILE *fd;
+   // int i = 0;
+    //char ch;
+   // long fcount;
+    //char *pdata;
     
     ship->country = NULL;
-
+    /*
     fd = fopen( fname, "r" );
     if( !fd )
     {
@@ -113,7 +114,7 @@ static void country( SHIP_T *ship )
        // i++;
     }
     fclose( fd ); //close the file since it's already in heap
-    
+    */
     int mid;
     char *ptemp;
     char atemp[ 4 ]; 
@@ -123,8 +124,8 @@ static void country( SHIP_T *ship )
     mid = atoi( strncpy( atemp, ship->mmsi, 3  ) );
     if( mid < 201 || mid > 775 )
     {
-        printf( "Unknown MID. It must be within 201..775\n" );
-        free( pdata );
+       // printf( "Unknown MID. It must be within 201..775\n" );
+        //free( pdata );
         return;
     }
 
@@ -134,17 +135,17 @@ static void country( SHIP_T *ship )
 
     //if string with all MIDs contains 3 digits from array
     //and copy address of string found to pointer
-    if( ( ptemp = strstr( pdata, atemp )  ) ) 
+    if( ( ptemp = strstr( mids, atemp )  ) ) 
     {
         ptemp += 4; // skipping digits and comma
         ship->country = ptemp;
-        while( *ptemp != '\n' ) // until we meet '\n' symbol in string
+        while( *ptemp != ';' ) // until we meet '\n' symbol in string
         {   
             ptemp++;
         }
         *ptemp = '\0'; //string terminator
     } 
-    free( pdata );
+    //free( pdata );
 }
 
 static void convertcoords( double lat, double lon, char *slat, char *slon, size_t len )
@@ -152,6 +153,8 @@ static void convertcoords( double lat, double lon, char *slat, char *slon, size_
     double fractpart;
     double intarr[1];
     char letter[2];
+    
+   // double *pintarr; //for integer that returns in double :) 
 
     //lat and lon already passed as arguments
     enum{ latitude, longitude };
@@ -170,7 +173,6 @@ static void convertcoords( double lat, double lon, char *slat, char *slon, size_
     lon = fabs( lon );
 
     fractpart = modf( lat, intarr ) * 60.0;
-    printf( "%f\n", fractpart );
     snprintf( slat, len, "%02.f %06.3f\'%c", *intarr, fractpart, letter[latitude] );
 
     fractpart = modf( lon, intarr ) * 60.0;
@@ -307,7 +309,7 @@ void display_all( SHIP_T* ship )
     country( ship );
     convertcoords( ship->lat, ship->lon, ship->slat, ship->slon, sizeof( ship->slat ) );
     puts( "*********************************************************" );
-    printf( "Ship Name: %s\nMMSI: %s\nCountry: %s\nCall: %s\n"
+    printf( "Ship Name: %s\nMMSI: %s\nFlag: %s\nCall: %s\n"
             "Lat: %f - %s\nLon: %f - %s\nSOG: %.1f kn\nCOG: %.1f Deg\n"
             "Pos accuracy: %s\nUTC: %s\n",
             ship->name, ship->mmsi, ship->country,ship->callsign,
