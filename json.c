@@ -76,11 +76,11 @@ void parser1( char *rawdata, SHIP_T *ship )
 
 static void country( SHIP_T *ship )
 {
-    FILE *fd;
-    int i = 0;
-    char ch;
-    long fcount;
-    char *pdata;
+   // FILE *fd;
+   // int i = 0;
+    //char ch;
+   // long fcount;
+    //char *pdata;
     
     ship->country = NULL;
     /*
@@ -125,7 +125,7 @@ static void country( SHIP_T *ship )
     if( mid < 201 || mid > 775 )
     {
        // printf( "Unknown MID. It must be within 201..775\n" );
-        free( pdata );
+        //free( pdata );
         return;
     }
 
